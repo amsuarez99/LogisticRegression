@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 import scipy
 import math
 from numpy.linalg import norm
@@ -91,6 +93,7 @@ B = gradiente_desc(X_train, y_train)
 y_pred = np.dot(X_test, B)
 classified_predictions = classifier(y_pred)
 
+print("------ DEFAULT DATASET -------")
 print("With Sklearn LogisticRegression")
 print(confusion_matrix(y_test,y_prediction))
 print("accurracy_score: ",accuracy_score(y_test, y_prediction))
@@ -123,10 +126,24 @@ lr.fit(X_train, y_train)
 # Get an array of predicted values
 y_prediction = lr.predict(X_test)
 
+test_set = np.concatenate((X_test, y_test.reshape(-1,1)), axis=1)
+test_set = pd.DataFrame(data=test_set, columns=['Height', 'Weight', 'Gender'])
+sns.scatterplot(x='Height', y='Weight', data=test_set, hue='Gender', ec=None, palette='Set1', legend=False)
+plt.title('Real Values')
+plt.show()
+
 B = gradiente_desc(X_train, y_train)
 y_pred = np.dot(X_test, B)
 classified_predictions = classifier(y_pred)
+classified_predictions = np.array(classified_predictions)
 
+predicted_set = np.concatenate((X_test, classified_predictions.reshape(-1,1)), axis=1)
+predicted_set = pd.DataFrame(data=predicted_set, columns=['Height', 'Weight', 'Gender'])
+sns.scatterplot(x='Height', y='Weight', data=predicted_set, hue='Gender', ec=None, palette='Set1', legend=False)
+plt.title('Predicted Values')
+plt.show()
+
+print("------ GENDER DATASET -------")
 print("With Sklearn LogisticRegression")
 print(confusion_matrix(y_test,y_prediction))
 print("accurracy_score: ",accuracy_score(y_test, y_prediction))
